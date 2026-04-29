@@ -109,7 +109,17 @@ def utility(board):
     """
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
-    raise NotImplementedError
+    # Obtenemos al ganador utilizando la función que ya creamos
+    ganador = winner(board)
+    
+    # Asignamos el valor según quién haya ganado
+    if ganador == X:
+        return 1
+    elif ganador ==  O:
+        return -1
+    else:
+        # Si el juego terminó pero el ganador es None, significa que es un empate
+        return 0
 
 
 def minimax(board):
