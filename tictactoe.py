@@ -66,14 +66,43 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    raise NotImplementedError
+    # Revisar victoria en las filas horizontales
+    for fila in board:
+        if fila[0] == fila[1] == fila[2] and fila[0] is not EMPTY:
+            return fila[0]
+
+    # Revisar victoria en las columnas verticales
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] and board[0][col] is not EMPTY:
+            return board[0][col]
+
+    # Revisar victoria en la diagonal principal (\)
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] is not EMPTY:
+        return board[0][0]
+
+    # Revisar victoria en la diagonal secundaria (/)
+    if board[0][2] == board[1][1] == board[2][0] and board[0][2] is not EMPTY:
+        return board[0][2]
+
+    # Si se evaluó todo el tablero y no hay tres en raya, no hay ganador aún (o es empate)
+    return None
 
 
 def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    raise NotImplementedError
+    # Si la función winner nos devuelve un ganador (X u O), el juego terminó
+    if winner(board) is not None:
+        return True
+        
+    # Si no hay ganador, verificamos si aún quedan casillas vacías en el tablero
+    for fila in board:
+        if EMPTY in fila:
+            return False
+            
+    # Si no hay ganador y no quedan casillas vacías, es un empate y el juego terminó
+    return True
 
 
 def utility(board):
