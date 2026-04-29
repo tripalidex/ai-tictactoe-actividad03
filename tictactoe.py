@@ -122,8 +122,62 @@ def utility(board):
         return 0
 
 
+def max_valor(board):
+    """Devuelve el valor máximo posible para el tablero actual."""
+    if terminal(board):
+        return utility(board)
+    
+    v = -math.inf
+    for action in actions(board):
+        v = max(v, min_valor(result(board, action)))
+        # Poda: si ya encontró la victoria, no necesita seguir buscando
+        if v == 1:
+            return v
+    return v
+
+def min_valor(board):
+    """Devuelve el valor mínimo posible para el tablero actual."""
+    if terminal(board):
+        return utility(board)
+    
+    v = math.inf
+    for action in actions(board):
+        v = min(v, max_valor(result(board, action)))
+        # Poda: si ya encontró la victoria para O, corta la búsqueda
+        if v == -1:
+            return v
+    return v
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    # Caso base: si el tablero ya es terminal, no hay movimiento posible
+    if terminal(board):
+        return None
+    
+    # Identificamos de quién es el turno
+    jugador_actual = player(board)
+
+    # Lógica si el turno es de X (Maximizar)
+    if jugador_actual == X:
+        mejor_valor = -math.inf
+        mejor_accion = None
+        for action in actions(board):
+            # Simulamos el movimiento y calculamos qué haría el rival (O, el minimizador)
+            valor_accion = min_valor(result(board, action))
+            if valor_accion > mejor_valor:
+                mejor_valor = valor_accion
+                mejor_accion = action
+        return mejor_accion
+    # Lógica si el turno es de O (Minimizar)
+    else:
+        mejor_valor = math.inf
+        mejor_accion = None
+        for action in actions(board):
+            # Simulamos el movimiento y calculamos qué haría el rival (X, el maximizador)
+            valor_accion = max_valor(result(board, action))
+            if valor_accion < mejor_valor:
+                mejor_valor = valor_accion
+                mejor_accion = action
+        return mejor_accion
